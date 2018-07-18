@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">每日打卡</string>
+    <string name="logout">退出登录</string>
 </resources>

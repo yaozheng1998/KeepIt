@@ -3,7 +3,6 @@ package y84107258.demo;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
@@ -22,13 +21,13 @@ public class TodoListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todolist);
 
-//        setCustomActionBar();
+        setCustomActionBar();
 
-        BottomNavigationBar bottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_navigation_bar);
+        BottomNavigationBar bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
         bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_today,"今日活动"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_history, "打卡统计"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_person, "个人信息"))
-                .setFirstSelectedPosition(0)
+                .setFirstSelectedPosition(2)
                 .initialise();
         bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
@@ -63,8 +62,8 @@ public class TodoListActivity extends Activity {
         personalFragment=new PersonalFragment();
 
         transaction=getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container, todayFragment).commit();
-        nowFragment=todayFragment;
+        transaction.add(R.id.fragment_container, personalFragment).commit();
+        nowFragment=personalFragment;
     }
 
     private void switchFragment(Fragment fragment){
@@ -81,7 +80,10 @@ public class TodoListActivity extends Activity {
     //设置自定义ActionBar
     private void setCustomActionBar(){
         ActionBar actionBar=getActionBar();
-        actionBar.setCustomView(R.layout.actionbar_layout);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        if(actionBar!=null){
+            actionBar.hide();
+        }
+//        actionBar.setCustomView(R.layout.actionbar_layout);
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     }
 }
