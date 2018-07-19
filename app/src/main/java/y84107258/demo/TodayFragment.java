@@ -9,18 +9,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
 
 public class TodayFragment extends Fragment {
-    private SwipeMenuRecyclerView menuRecyclerView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_today, container, false);
+        View view=inflater.inflate(R.layout.fragment_today, container, false);
+        view.findViewById(R.id.newSchedule).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ScheduleDialogFragment scheduleDialogFragment=new ScheduleDialogFragment();
+                scheduleDialogFragment.show(getFragmentManager());
+//                Toast.makeText(getContext(),"add",Toast.LENGTH_SHORT).show();
+            }
+        });
+        return view;
     }
 
     @Override
@@ -39,12 +48,15 @@ public class TodayFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new MyItemDecoration(getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
 
-//        menuRecyclerView=view.findViewById(R.id.recycler_view);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public void addNewSchedule(){
+
     }
 
 }
