@@ -15,6 +15,7 @@ public class ScheduleDialogFragment extends DialogFragment {
         void onClick(String scheduleName, String startTime, String endTime);
     }
     private Callback callback;
+
     public void show(FragmentManager fragmentManager){
         show(fragmentManager,"ScheduleDialogFragment");
     }
