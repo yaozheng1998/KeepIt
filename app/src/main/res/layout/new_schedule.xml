@@ -9,18 +9,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/actionBarYellow">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@color/actionBarYellow"
+            android:clickable="true"
+            android:focusable="auto"
+            android:src="@drawable/ic_back" />
+
+        <Space
+            android:layout_width="131dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="122dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="14dp"
+            android:layout_weight="2"
             android:paddingBottom="5dp"
             android:paddingLeft="20dp"
             android:text="@string/new_schedule"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:typeface="serif" />
     </LinearLayout>
 
@@ -31,10 +46,10 @@
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="19dp"
             android:layout_marginLeft="92dp"
             android:layout_marginStart="92dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="66dp"
             android:text="@string/schedule_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="92dp"
             android:layout_marginStart="92dp"
-            android:layout_marginTop="76dp"
+            android:layout_marginTop="60dp"
             android:text="@string/start_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
@@ -56,20 +71,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="92dp"
             android:layout_marginStart="92dp"
-            android:layout_marginTop="76dp"
+            android:layout_marginTop="60dp"
             android:text="@string/end_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="148dp"
-            android:layout_marginStart="148dp"
-            android:layout_marginTop="348dp"
+            android:id="@+id/confirm_new"
+            android:layout_width="69dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="156dp"
+            android:layout_marginStart="156dp"
+            android:layout_marginTop="392dp"
             android:background="@color/finishGreen"
             android:text="@string/confirm"
+            android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,22 +95,20 @@
             android:layout_height="49dp"
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="50dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
             app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="144dp"
-            android:layout_height="39dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="52dp"
-            android:ems="10"
-            android:inputType="time"
+        <TimePicker
+            android:id="@+id/start_time"
+            android:layout_width="178dp"
+            android:layout_height="326dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="0.3"
             app:layout_constraintStart_toEndOf="@+id/textView14"
             app:layout_constraintTop_toBottomOf="@+id/editText" />
 
@@ -104,11 +118,45 @@
             android:layout_height="45dp"
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="36dp"
             android:ems="10"
             android:inputType="time"
             app:layout_constraintStart_toEndOf="@+id/textView15"
-            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+            app:layout_constraintTop_toBottomOf="@+id/start_time" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="92dp"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="60dp"
+            android:text="选择封面："
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <Button
+            android:id="@+id/view_localpics"
+            android:layout_width="119dp"
+            android:layout_height="37dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="8dp"
+            android:onClick="viewGallery"
+            android:text="浏览本地图片"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="91dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/editText3"
+            app:srcCompat="@drawable/test" />
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

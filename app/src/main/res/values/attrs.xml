@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Theme">
+        <attr name="customImageViewStyle" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="CustomImageView">
+        <attr name="circle" format="boolean"/>
+        <attr name="radius" format="dimension"/>
+    </declare-styleable>
+</resources>
+
+<!--day1：整理工作环境；与导师交流基本目标、任务范围；阅读信息安全、Java编程规范；
+day2：学习安卓，完成demo登录界面
+day3&4：写APP
+day5：阅读Java编程规范，-->

@@ -27,7 +27,7 @@ public class TodoListActivity extends Activity {
         bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_today,"今日活动"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_history, "打卡统计"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_person, "个人信息"))
-                .setFirstSelectedPosition(2)
+                .setFirstSelectedPosition(0)
                 .initialise();
         bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
@@ -62,8 +62,8 @@ public class TodoListActivity extends Activity {
         personalFragment=new PersonalFragment();
 
         transaction=getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container, personalFragment).commit();
-        nowFragment=personalFragment;
+        transaction.add(R.id.fragment_container, todayFragment).commit();
+        nowFragment=todayFragment;
     }
 
     private void switchFragment(Fragment fragment){

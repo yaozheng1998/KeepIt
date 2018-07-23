@@ -2,6 +2,7 @@ package y84107258.demo;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,9 +25,17 @@ public class TodayFragment extends Fragment {
         view.findViewById(R.id.newSchedule).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ScheduleDialogFragment scheduleDialogFragment=new ScheduleDialogFragment();
-                scheduleDialogFragment.show(getFragmentManager());
-//                Toast.makeText(getContext(),"add",Toast.LENGTH_SHORT).show();
+//                ScheduleDialogFragment scheduleDialogFragment=new ScheduleDialogFragment();
+//                scheduleDialogFragment.show(getFragmentManager());
+                Intent intent=new Intent(getActivity(), NewScheduleActivity.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.happyThing).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(), HappyThingActivity.class);
+                startActivity(intent);
             }
         });
         return view;
@@ -46,7 +55,7 @@ public class TodayFragment extends Fragment {
         RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(),names);
 //        adapter.setClickListener();
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new MyItemDecoration(getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
+        recyclerView.addItemDecoration(new MyItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
 
     }
 

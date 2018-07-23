@@ -16,7 +16,6 @@ public class MainActivity extends Activity {
     public void login (View view) {
         //如果设备上没有可接收的隐式Intent的应用，start会崩溃；
         Intent intent=new Intent(MainActivity.this, TodoListActivity.class);
-
         startActivity(intent);
     }
 }
