@@ -47,7 +47,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="440dp"
         android:background="@android:color/holo_red_light"
         android:text="@string/logout"
         android:textColor="@android:color/white"
@@ -58,51 +58,40 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="132dp"
-        android:layout_height="53dp"
-        android:layout_marginLeft="184dp"
-        android:layout_marginStart="184dp"
-        android:layout_marginTop="71dp"
+        android:layout_width="128dp"
+        android:layout_height="28dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="112dp"
         android:text="已连续签到2天"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="116dp"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="143dp"
-        android:text="昵称："
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/name"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="41dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="18dp"
+        android:layout_width="47dp"
+        android:layout_height="38dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="20dp"
         android:text="yz"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="190dp"
-        android:layout_height="61dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="57dp"
-        android:clickable="true"
-        android:focusable="auto"
-        android:src="@drawable/test"
+        android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
+    <y84107258.demo.view.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/test"
+        app:border_color="#000000"
+        app:border_width="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </android.support.constraint.ConstraintLayout>

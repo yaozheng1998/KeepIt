@@ -8,13 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+
+import y84107258.demo.view.CircleImageView;
 
 public class PersonalFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_personal, container, false);
+        View view=inflater.inflate(R.layout.fragment_personal, container, false);
+        CircleImageView circleImageView= view.findViewById(R.id.avatar);
+        return view;
     }
 
     @Override

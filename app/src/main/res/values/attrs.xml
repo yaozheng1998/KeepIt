@@ -7,9 +7,9 @@
         <attr name="circle" format="boolean"/>
         <attr name="radius" format="dimension"/>
     </declare-styleable>
-</resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension"/>
+        <attr name="border_color" format="color"/>
+    </declare-styleable>
 
-<!--day1：整理工作环境；与导师交流基本目标、任务范围；阅读信息安全、Java编程规范；
-day2：学习安卓，完成demo登录界面
-day3&4：写APP
-day5：阅读Java编程规范，-->
+</resources>

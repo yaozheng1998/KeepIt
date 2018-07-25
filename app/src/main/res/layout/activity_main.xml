@@ -28,8 +28,10 @@
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"
+        android:background="@color/finishGreen"
         android:onClick="login"
         android:text="登录"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toEndOf="@+id/remPassword"
         app:layout_constraintTop_toBottomOf="@+id/input_password" />
 
@@ -91,5 +93,17 @@
         android:text="记住密码"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="112dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="16dp"
+        android:text="快速注册"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/remPassword" />
 
 </android.support.constraint.ConstraintLayout>

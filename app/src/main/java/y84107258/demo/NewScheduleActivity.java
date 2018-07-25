@@ -5,9 +5,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewScheduleActivity extends Activity implements ScheduleDialogFragment.Callback {
     private static final int PHOTO_REQUEST_CAMERA=1;
@@ -30,13 +41,30 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             }
         });
 
+        //确认按钮监听
         findViewById(R.id.confirm_new).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String activityName=((EditText)findViewById(R.id.activity_name)).getText().toString();
+                TimePicker startPicker=(TimePicker)findViewById(R.id.start_time);
+                TimePicker endPicker=(TimePicker)findViewById(R.id.end_time);
+                String startTime=startPicker.getCurrentHour()+"-"+startPicker.getCurrentMinute();
+                String endTime=endPicker.getCurrentHour()+"-"+endPicker.getCurrentMinute();
+
                 Intent intent=new Intent(NewScheduleActivity.this, TodoListActivity.class);
                 startActivity(intent);
             }
         });
+
+        TimePicker startPicker= (TimePicker)findViewById(R.id.start_time);
+        startPicker.setIs24HourView(true);
+        setNumberPickerTextSize(startPicker);
+        resizeTimePicker(startPicker);
+
+        TimePicker endPicker=(TimePicker) findViewById(R.id.end_time);
+        endPicker.setIs24HourView(true);
+        setNumberPickerTextSize(endPicker);
+        resizeTimePicker(endPicker);
     }
     @Override
     public void onClick(String scheduleName, String startTime, String endTime) {
@@ -90,5 +118,56 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         super.onActivityResult(requestCode,resultCode,data);
     }
 
+    private List<NumberPicker> findNumberPicker(ViewGroup viewGroup){
+        List<NumberPicker> npList=new ArrayList<NumberPicker>();
+        View child=null;
+        if(viewGroup!=null){
+            for(int i=0;i<viewGroup.getChildCount();i++){
+                child=viewGroup.getChildAt(i);
+                if (child instanceof NumberPicker){
+                    npList.add((NumberPicker)child);
+                }
+                else if (child instanceof LinearLayout){
+                    List<NumberPicker> result=findNumberPicker((ViewGroup) child);
+                    if (result.size()>0){
+                        return result;
+                    }
+                }
+            }
+        }
+        return npList;
+    }
 
+    private EditText findEditText(NumberPicker np){
+        if(np!=null){
+            for(int i=0;i<np.getChildCount();i++){
+                View child=np.getChildAt(i);
+                if(child instanceof EditText){
+                    return (EditText)child;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void setNumberPickerTextSize(ViewGroup viewGroup){
+        List<NumberPicker> npList=findNumberPicker(viewGroup);
+        if(npList!=null){
+            for(NumberPicker np:npList){
+                EditText et=findEditText(np);
+                et.setFocusable(false);
+                et.setGravity(Gravity.CENTER);
+                et.setTextSize(10);
+            }
+        }
+    }
+
+    private void resizeTimePicker(TimePicker tp){
+        List<NumberPicker> npList=findNumberPicker(tp);
+        for(NumberPicker np:npList){
+            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10,0,10,0);
+            np.setLayoutParams(params);
+        }
+    }
 }

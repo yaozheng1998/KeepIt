@@ -17,14 +17,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/happyThing"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="auto"
-            android:src="@drawable/ic_happy" />
+            android:background="#00000000"
+            android:src="@drawable/happy" />
 
         <Space
             android:layout_width="wrap_content"
@@ -47,14 +46,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/newSchedule"
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="auto"
-            android:src="@drawable/ic_add" />
+            android:background="#00000000"
+            android:src="@drawable/add" />
+
     </LinearLayout>
 
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
