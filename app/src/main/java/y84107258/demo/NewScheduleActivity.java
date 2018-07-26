@@ -3,7 +3,9 @@ package y84107258.demo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +18,7 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.InputStream;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,7 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
     public void viewGallery(View view) {
         Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+        //这里调用有问题
         startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
     }
 
@@ -104,10 +108,14 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
         if(requestCode==PHOTO_REQUEST_GALLERY){
-            if (data!=null){
+            if (data==null){
+            }else {
                 Uri uri=data.getData();
-                crop(uri);
+                Log.v("NewScheduleActivity",uri.getPath());
+//                crop(uri);
+                new DownloadImageTask((ImageView) findViewById(R.id.activity_image)).doInBackground("http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png");
             }
         }else if(requestCode==PHOTO_REQUEST_CUT){
             if(data!=null){
@@ -115,7 +123,6 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                 this.image.setImageBitmap(bitmap);
             }
         }
-        super.onActivityResult(requestCode,resultCode,data);
     }
 
     private List<NumberPicker> findNumberPicker(ViewGroup viewGroup){
@@ -168,6 +175,29 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(10,0,10,0);
             np.setLayoutParams(params);
+        }
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
+        ImageView bmImage;
+        public DownloadImageTask(ImageView bmImage){
+            this.bmImage=bmImage;
+        }
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay=urls[0];
+            Bitmap mIcon=null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon;
+        }
+        protected void onPostExecute(Bitmap result){
+            bmImage.setImageBitmap(result);
         }
     }
 }

@@ -56,34 +56,23 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/textView14"
             android:layout_width="wrap_content"
-            android:layout_height="19dp"
-            android:layout_marginLeft="82dp"
-            android:layout_marginStart="82dp"
-            android:layout_marginTop="66dp"
-            android:text="@string/schedule_name"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="148dp"
+            android:text="@string/start_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="82dp"
-            android:layout_marginStart="82dp"
-            android:layout_marginTop="60dp"
-            android:text="@string/start_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-        <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginLeft="82dp"
-            android:layout_marginStart="82dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="68dp"
             android:text="@string/end_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -94,24 +83,11 @@
             android:layout_height="32dp"
             android:layout_marginLeft="156dp"
             android:layout_marginStart="156dp"
-            android:layout_marginTop="412dp"
+            android:layout_marginTop="432dp"
             android:background="@color/finishGreen"
             android:text="@string/confirm"
             android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/activity_name"
-            android:layout_width="144dp"
-            android:layout_height="49dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="50dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text=""
-            app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TimePicker
@@ -150,7 +126,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/activity_image"
             android:layout_width="91dp"
             android:layout_height="84dp"
             android:layout_marginLeft="52dp"
@@ -159,6 +135,22 @@
             android:src="@drawable/test"
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/end_time" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="218dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="75dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/activity_name"
+                android:layout_width="216dp"
+                android:layout_height="37dp"
+                android:hint="活动名称" />
+        </android.support.design.widget.TextInputLayout>
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
