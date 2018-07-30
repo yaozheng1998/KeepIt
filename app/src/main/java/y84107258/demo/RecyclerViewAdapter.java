@@ -15,6 +15,7 @@ import java.util.List;
 import y84107258.demo.model.MyActivity;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    private TextView whetherFinish;
     private List<MyActivity> data;
     private LayoutInflater inflater;
     private ItemClickListener itemClickListener;
@@ -29,7 +30,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.schedule_row, parent, false);
-        view.findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
+        whetherFinish= view.findViewById(R.id.finish);
+        whetherFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"打卡成功！",Toast.LENGTH_SHORT).show();
@@ -69,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 itemClickListener.onItemClick(view, getAdapterPosition());
             }
         }
+
     }
 
     public void setClickListener(ItemClickListener itemClickListener){

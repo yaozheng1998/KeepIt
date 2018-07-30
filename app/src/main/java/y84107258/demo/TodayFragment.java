@@ -55,13 +55,6 @@ public class TodayFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        ArrayList<String> names=new ArrayList<>();
-        names.add("Reading");
-        names.add("Listening");
-        names.add("Speaking");
-        names.add("Writing");
-        names.add("Singing");
-
 //        ArrayList<MyActivity> myActivities=new ArrayList<>();
 //        myActivities.add(new MyActivity("阅读","10:00","12:00",""));
 //        myActivities.add(new MyActivity("玩耍","13:00","18:00",""));
@@ -76,8 +69,8 @@ public class TodayFragment extends Fragment {
 
         RecyclerView recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(),getActFromGson(preferencess.getString("activities",""))                                                                                                                                          );
-//        adapter.setClickListener();
+        RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(),getActFromGson(preferencess.getString("activities",""))                                                                                                                                        );
+
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new MyItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
 
@@ -86,10 +79,6 @@ public class TodayFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public void addNewSchedule(){
-
     }
 
     public static ArrayList<MyActivity> getActFromGson(String raw){
