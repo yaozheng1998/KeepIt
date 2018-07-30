@@ -36,4 +36,5 @@ dependencies {
     implementation 'com.ashokvarma.android:bottom-navigation-bar:1.4.1'
     implementation 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     testImplementation 'junit:junit:4.12'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

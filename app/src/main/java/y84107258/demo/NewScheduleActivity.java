@@ -2,6 +2,7 @@ package y84107258.demo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,12 +19,19 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.InputStream;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import y84107258.demo.model.MyActivity;
+
 public class NewScheduleActivity extends Activity implements ScheduleDialogFragment.Callback {
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     private static final int PHOTO_REQUEST_CAMERA=1;
     private static final int PHOTO_REQUEST_GALLERY=2;
     private static final int PHOTO_REQUEST_CUT=3;
@@ -34,6 +42,9 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_schedule);
         this.image = (ImageView) this.findViewById(R.id.image);
+
+        preferences=getSharedPreferences("activities",0);
+        editor=preferences.edit();
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +65,19 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                 String startTime=startPicker.getCurrentHour()+"-"+startPicker.getCurrentMinute();
                 String endTime=endPicker.getCurrentHour()+"-"+endPicker.getCurrentMinute();
 
-                Intent intent=new Intent(NewScheduleActivity.this, TodoListActivity.class);
-                startActivity(intent);
+                if (activityName.equals("")){
+                    Toast.makeText(NewScheduleActivity.this,"请填写活动名称",Toast.LENGTH_SHORT).show();
+                }else {
+                    ArrayList<MyActivity> myActivities = getActFromGson(preferences.getString("activities", ""));
+                    myActivities.add(new MyActivity(activityName, startTime, endTime, ""));
+                    Gson gson = new Gson();
+                    String jsonStr = gson.toJson(myActivities);
+                    editor.putString("activities", jsonStr);
+                    editor.apply();
+
+                    Intent intent = new Intent(NewScheduleActivity.this, TodoListActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -199,5 +221,17 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         protected void onPostExecute(Bitmap result){
             bmImage.setImageBitmap(result);
         }
+    }
+
+    public static ArrayList<MyActivity> getActFromGson(String raw){
+        ArrayList<MyActivity> result=new ArrayList<>();
+        Gson gson=new Gson();
+        ArrayList<MyActivity> acts=gson.fromJson(raw,new TypeToken<List<MyActivity>>(){}.getType());
+        if (acts!=null) {
+            for (MyActivity a : acts) {
+                result.add(a);
+            }
+        }
+        return result;
     }
 }

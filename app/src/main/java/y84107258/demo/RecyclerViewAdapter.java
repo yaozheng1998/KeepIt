@@ -12,13 +12,15 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import y84107258.demo.model.MyActivity;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private List<String> data;
+    private List<MyActivity> data;
     private LayoutInflater inflater;
     private ItemClickListener itemClickListener;
     private Drawable pic;
 
-    RecyclerViewAdapter(Context context, List<String> data){
+    RecyclerViewAdapter(Context context, List<MyActivity> data){
         pic=context.getResources().getDrawable(R.drawable.test);
         this.inflater=LayoutInflater.from(context);
         this.data=data;
@@ -38,10 +40,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String scheduleName=data.get(position);
+        MyActivity oneActivity=data.get(position);
+        holder.myTextView.setText(oneActivity.getActivityName());
+        holder.timeView.setText(oneActivity.getStartTime()+" - "+oneActivity.getEndTime());
         holder.myImageView.setImageDrawable(pic);
-        holder.myTextView.setText(scheduleName);
-        holder.timeView.setText("8:00-10:00");
     }
 
     @Override
