@@ -62,12 +62,14 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                 String activityName=((EditText)findViewById(R.id.activity_name)).getText().toString();
                 TimePicker startPicker=(TimePicker)findViewById(R.id.start_time);
                 TimePicker endPicker=(TimePicker)findViewById(R.id.end_time);
-                String startTime=startPicker.getCurrentHour()+"-"+startPicker.getCurrentMinute();
-                String endTime=endPicker.getCurrentHour()+"-"+endPicker.getCurrentMinute();
+                String startTime=modifyTime(startPicker.getCurrentHour(), startPicker.getCurrentMinute());
+                String endTime=modifyTime(endPicker.getCurrentHour(), endPicker.getCurrentMinute());
 
                 if (activityName.equals("")){
                     Toast.makeText(NewScheduleActivity.this,"请填写活动名称",Toast.LENGTH_SHORT).show();
-                }else {
+                }else if(startPicker.getCurrentHour()>endPicker.getCurrentHour() || (startPicker.getCurrentHour()==endPicker.getCurrentHour() && startPicker.getCurrentMinute()>endPicker.getCurrentMinute())){
+                    Toast.makeText(NewScheduleActivity.this,"结束时间应晚于开始时间",Toast.LENGTH_SHORT).show();
+                } else{
                     ArrayList<MyActivity> myActivities = getActFromGson(preferences.getString("activities", ""));
                     myActivities.add(new MyActivity(activityName, startTime, endTime, ""));
                     Gson gson = new Gson();
@@ -81,10 +83,16 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             }
         });
 
-        TimePicker startPicker= (TimePicker)findViewById(R.id.start_time);
+        final TimePicker startPicker= (TimePicker)findViewById(R.id.start_time);
         startPicker.setIs24HourView(true);
         setNumberPickerTextSize(startPicker);
         resizeTimePicker(startPicker);
+        startPicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hour, int minute) {
+
+            }
+        });
 
         TimePicker endPicker=(TimePicker) findViewById(R.id.end_time);
         endPicker.setIs24HourView(true);
@@ -233,5 +241,16 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             }
         }
         return result;
+    }
+
+    private String modifyTime(int hour, int minute){
+        String afterHour=hour+"",afterMinute=minute+"";
+        if (hour<10){
+            afterHour="0"+hour;
+        }
+        if (minute<10){
+            afterMinute="0"+minute;
+        }
+        return afterHour+":"+afterMinute;
     }
 }
