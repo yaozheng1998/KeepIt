@@ -1,13 +1,17 @@
 package y84107258.demo;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,9 @@ import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import y84107258.demo.model.MyActivity;
 
@@ -79,6 +85,8 @@ public class TodayFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        //设置每日零点的定时任务，清空今日活动列表;
+        startRemind();
     }
 
     public static ArrayList<MyActivity> getActFromGson(String raw){
@@ -91,5 +99,32 @@ public class TodayFragment extends Fragment {
             }
         }
         return result;
+    }
+
+    private void startRemind(){
+        Calendar mCalendar=Calendar.getInstance();
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        long systemTime=System.currentTimeMillis();
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        mCalendar.set(Calendar.HOUR_OF_DAY,16);
+        mCalendar.set(Calendar.MINUTE,59);
+        mCalendar.set(Calendar.SECOND,0);
+        mCalendar.set(Calendar.MILLISECOND,0);
+        long selectTime=mCalendar.getTimeInMillis();
+        if (systemTime>selectTime){
+            mCalendar.add(Calendar.DAY_OF_MONTH,1);
+        }
+        Intent intent=new Intent(getActivity(),AlarmReceiver.class);
+        PendingIntent pi=PendingIntent.getBroadcast(getActivity(),0, intent,0);
+        AlarmManager am=(AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        //先设置每五分钟提醒一次
+        am.setRepeating(AlarmManager.RTC_WAKEUP,mCalendar.getTimeInMillis(),1000*60*2,pi);
+    }
+    private void stopRemind(){
+        Intent intent=new Intent(getActivity(),AlarmReceiver.class);
+        PendingIntent pi=PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        AlarmManager am=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pi);
     }
 }

@@ -1,13 +1,19 @@
 package y84107258.demo;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -23,7 +29,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStream;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +41,14 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
     private static final int PHOTO_REQUEST_GALLERY=2;
     private static final int PHOTO_REQUEST_CUT=3;
     private ImageView image;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA=0x008;
+    private Intent intent;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_schedule);
-        this.image = (ImageView) this.findViewById(R.id.image);
+        this.image = (ImageView) this.findViewById(R.id.activity_image);
 
         preferences=getSharedPreferences("activities",0);
         editor=preferences.edit();
@@ -109,15 +116,31 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         scheduleDialogFragment.show(getFragmentManager());
     }
 
-    /**
-     * 从相册选取图片
-     * @param view
-     */
     public void viewGallery(View view) {
-        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         //这里调用有问题
+        if (Build.VERSION.SDK_INT>22){
+//            if (getApplicationContext().checkSelfPermission(Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_CAMERA);
+//            }
+        }
         startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, String permissions[], int[] grantResults){
+        switch(requestCode){
+            case MY_PERMISSIONS_REQUEST_CAMERA:
+                if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+                }else{
+                    Log.v("NewScheduleActivity","需要权限。。");
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        }
     }
 
     private void crop(Uri uri){
@@ -136,6 +159,7 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
 
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -143,9 +167,23 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             if (data==null){
             }else {
                 Uri uri=data.getData();
+                String scheme=uri.getScheme();
+                String imagePath="";
                 Log.v("NewScheduleActivity",uri.getPath());
 //                crop(uri);
-                new DownloadImageTask((ImageView) findViewById(R.id.activity_image)).doInBackground("http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png");
+
+                if ("content".equals(scheme)) {
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    imagePath = cursor.getString(columnIndex);
+                    cursor.close();
+                }else if ("file".equals(scheme)){
+                    imagePath=uri.getPath();
+                }
+                Bitmap bitmap=BitmapFactory.decodeFile(imagePath);
+                this.image.setImageBitmap(bitmap);
             }
         }else if(requestCode==PHOTO_REQUEST_CUT){
             if(data!=null){

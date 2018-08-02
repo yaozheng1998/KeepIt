@@ -13,6 +13,8 @@ import android.view.View;
 public class ScheduleDialogFragment extends DialogFragment {
     public interface Callback{
         void onClick(String scheduleName, String startTime, String endTime);
+
+        void onRequestPermissionResult(int requestCode, String permissions[], int[] grantResults);
     }
     private Callback callback;
 
