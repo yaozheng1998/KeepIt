@@ -1,8 +1,10 @@
 package y84107258.demo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import y84107258.demo.model.MyActivity;
+import y84107258.demo.util.ActGsonUtil;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements ItemTouchHelperCallback.SwipedListener {
     private TextView whetherFinish;
     private List<MyActivity> data;
     private LayoutInflater inflater;
     private ItemClickListener itemClickListener;
     private Drawable pic;
+
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
     RecyclerViewAdapter(Context context, List<MyActivity> data){
         pic=context.getResources().getDrawable(R.drawable.test);
@@ -37,6 +46,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Toast.makeText(view.getContext(),"打卡成功！",Toast.LENGTH_SHORT).show();
             }
         });
+
+        preferences=view.getContext().getSharedPreferences("activities",0);
+        editor=preferences.edit();
+
         return new ViewHolder(view);
     }
 
@@ -53,6 +66,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return data.size();
     }
 
+    @Override
+    public void onItemRight(int position) {
+
+    }
+
+    @Override
+    public void onItemLeft(int position) {
+        data.remove(position);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(data);
+        editor.putString("activities", jsonStr);
+        editor.apply();
+    }
+
+    /**
+     * ViewHolder实现常用方法，比如：点击事件、长按事件等
+     */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView myImageView;
         TextView myTextView;
@@ -67,10 +97,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         @Override
         public void onClick(View view) {
+            //点击item事件
             if(itemClickListener!=null){
                 itemClickListener.onItemClick(view, getAdapterPosition());
             }
         }
+
 
     }
 

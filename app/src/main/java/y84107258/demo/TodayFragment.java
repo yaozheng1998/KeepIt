@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ import y84107258.demo.model.MyActivity;
 public class TodayFragment extends Fragment {
     private SharedPreferences preferencess;
     private SharedPreferences.Editor editor;
+    private ItemTouchHelper.Callback callback;
+    private ItemTouchHelper itemTouchHelper;
 
     @Nullable
     @Override
@@ -80,6 +83,10 @@ public class TodayFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new MyItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
 
+        //设置左滑删除操作
+        callback=new ItemTouchHelperCallback(adapter);
+        itemTouchHelper=new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
