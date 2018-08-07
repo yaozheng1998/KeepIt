@@ -8,12 +8,16 @@ public class MyActivity {
     private String startTime;
     private String endTime;
     private String pic;
+    private String alarmTime;
+    private String description;
 
-    public MyActivity(String name, String stime, String etime, String pic){
+    public MyActivity(String name, String stime, String etime, String pic,String atime,String des){
         this.activityName=name;
         this.startTime=stime;
         this.endTime=etime;
         this.pic=pic;
+        this.alarmTime=atime;
+        this.description=des;
     }
 
     public String getActivityName() {
@@ -48,12 +52,31 @@ public class MyActivity {
         this.pic = pic;
     }
 
+
+    public String getAlarmTime() {
+        return alarmTime;
+    }
+
+    public void setAlarmTime(String alarmTime) {
+        this.alarmTime = alarmTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public JSONObject toJSON() throws JSONException {
         JSONObject json=new JSONObject();
         json.put("name",activityName);
         json.put("start",startTime);
         json.put("end",endTime);
         json.put("pic",pic);
+        json.put("alarm",alarmTime);
+        json.put("des",description);
         return json;
     }
     public static MyActivity parseJSONString(String jsonString) throws JSONException {
@@ -62,6 +85,8 @@ public class MyActivity {
         String start=jsonObject.getString("start");
         String end=jsonObject.getString("end");
         String pic=jsonObject.getString("pic");
-        return new MyActivity(name,start,end,pic);
+        String alarm=jsonObject.getString("alarm");
+        String des=jsonObject.getString("des");
+        return new MyActivity(name,start,end,pic,alarm,des);
     }
 }

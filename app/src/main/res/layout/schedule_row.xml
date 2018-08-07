@@ -18,16 +18,18 @@
         android:background="@color/divide_gray_color"/>
 
     <LinearLayout
+        android:id="@+id/schedule_detail"
         android:layout_width="189dp"
         android:layout_height="match_parent"
+        android:background="@color/divide_gray_color"
+        android:clickable="true"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:background="@color/divide_gray_color">
+        android:paddingLeft="10dp">
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="11dp"
-            android:background="@color/divide_gray_color"/>
+            android:background="@color/divide_gray_color" />
 
         <TextView
             android:id="@+id/schedule_name"

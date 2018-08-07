@@ -52,17 +52,18 @@
             android:layout_marginTop="12dp"
             android:text="记住密码" />
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:id="@+id/loginButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="12dp"
+            android:background="@color/actionBarYellow"
             android:onClick="login"
             android:padding="12dp"
-            android:background="@color/actionBarYellow"
+            android:text="登录"
             android:textColor="@android:color/white"
-            android:text="登录" />
+            android:textSize="18sp" />
 
         <TextView android:id="@+id/register"
             android:layout_width="fill_parent"

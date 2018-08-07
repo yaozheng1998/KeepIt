@@ -19,6 +19,7 @@
         <activity android:name=".TodoListActivity"></activity>
         <activity android:name=".HappyThingActivity"></activity>
         <activity android:name=".NewScheduleActivity"></activity>
+        <activity android:name=".ScheduleInfoActivity"></activity>
 
         <receiver android:name=".AlarmReceiver" android:process=":remote"/>
     </application>

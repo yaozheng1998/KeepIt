@@ -78,7 +78,7 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                     Toast.makeText(NewScheduleActivity.this,"结束时间应晚于开始时间",Toast.LENGTH_SHORT).show();
                 } else{
                     ArrayList<MyActivity> myActivities = getActFromGson(preferences.getString("activities", ""));
-                    myActivities.add(new MyActivity(activityName, startTime, endTime, ""));
+                    myActivities.add(new MyActivity(activityName, startTime, endTime, "","",""));
                     Gson gson = new Gson();
                     String jsonStr = gson.toJson(myActivities);
                     editor.putString("activities", jsonStr);
