@@ -2,6 +2,7 @@ package y84107258.demo;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,9 +26,14 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,24 +172,26 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         if(requestCode==PHOTO_REQUEST_GALLERY){
             if (data==null){
             }else {
+                ContentResolver resolver=getContentResolver();
                 Uri uri=data.getData();
                 String scheme=uri.getScheme();
                 String imagePath="";
                 Log.v("NewScheduleActivity",uri.getPath());
 //                crop(uri);
-
-                if ("content".equals(scheme)) {
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    imagePath = cursor.getString(columnIndex);
-                    cursor.close();
-                }else if ("file".equals(scheme)){
-                    imagePath=uri.getPath();
+                try {
+                    Bitmap bm=MediaStore.Images.Media.getBitmap(resolver,uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                Bitmap bitmap=BitmapFactory.decodeFile(imagePath);
-                this.image.setImageBitmap(bitmap);
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor =managedQuery(uri, filePathColumn, null, null, null);
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                imagePath = cursor.getString(columnIndex);
+                Glide.with(this).load(imagePath).into(image);
+//                Bitmap bitmap=getBitmapByPath(imagePath);
+//                this.image.setImageBitmap(bitmap);
+//                cursor.close();
             }
         }else if(requestCode==PHOTO_REQUEST_CUT){
             if(data!=null){
@@ -290,5 +298,32 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             afterMinute="0"+minute;
         }
         return afterHour+":"+afterMinute;
+    }
+
+    /**
+     * 获取bitmap
+     * @param filePath
+     * @return
+     */
+    public static Bitmap getBitmapByPath(String filePath) {
+        return getBitmapByPath(filePath, null);
+    }
+    public static Bitmap getBitmapByPath(String filePath, BitmapFactory.Options opts) {
+        FileInputStream fis = null;
+        Bitmap bitmap =null;
+        try {
+            File file = new File(filePath);
+            fis = new FileInputStream(file);
+            bitmap = BitmapFactory.decodeStream(fis,null,opts);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                fis.close();
+            } catch (Exception e) {}
+        }
+        return bitmap;
     }
 }

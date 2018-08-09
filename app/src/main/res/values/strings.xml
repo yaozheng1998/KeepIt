@@ -8,4 +8,8 @@
     <string name="end_time">结束时间：</string>
     <string name="confirm">确认</string>
     <string name="card">今日卡片</string>
+
+    <string name="save_picture">保存图片</string>
+    <string name="save_picture_fail">保存失败</string>
+    <string name="save_picture_success">图片成功保存至%s目录</string>
 </resources>
