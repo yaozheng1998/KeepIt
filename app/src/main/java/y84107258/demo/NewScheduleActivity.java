@@ -14,7 +14,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -35,20 +37,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import y84107258.demo.model.MyActivity;
 
 public class NewScheduleActivity extends Activity implements ScheduleDialogFragment.Callback {
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
     private static final int PHOTO_REQUEST_CAMERA=1;
     private static final int PHOTO_REQUEST_GALLERY=2;
     private static final int PHOTO_REQUEST_CUT=3;
     private ImageView image;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA=0x008;
     private Intent intent;
+    Date date=new Date();
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -56,9 +61,7 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         setContentView(R.layout.new_schedule);
         this.image = (ImageView) this.findViewById(R.id.activity_image);
 
-        preferences=getSharedPreferences("activities",0);
-        editor=preferences.edit();
-
+        preferences= PreferenceManager.getDefaultSharedPreferences(this);
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,12 +86,13 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                 }else if(startPicker.getCurrentHour()>endPicker.getCurrentHour() || (startPicker.getCurrentHour()==endPicker.getCurrentHour() && startPicker.getCurrentMinute()>endPicker.getCurrentMinute())){
                     Toast.makeText(NewScheduleActivity.this,"结束时间应晚于开始时间",Toast.LENGTH_SHORT).show();
                 } else{
-                    ArrayList<MyActivity> myActivities = getActFromGson(preferences.getString("activities", ""));
-                    myActivities.add(new MyActivity(activityName, startTime, endTime, "","",""));
-                    Gson gson = new Gson();
-                    String jsonStr = gson.toJson(myActivities);
-                    editor.putString("activities", jsonStr);
-                    editor.apply();
+                    MyActivity activity=new MyActivity();
+                    activity.setActivityName(activityName);
+                    activity.setStartTime(startTime);
+                    activity.setEndTime(endTime);
+                    activity.setActivityDate(getDate());
+                    activity.setUserId(preferences.getString("myusername",""));
+                    activity.save();
 
                     Intent intent = new Intent(NewScheduleActivity.this, TodoListActivity.class);
                     startActivity(intent);
@@ -134,6 +138,7 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
         startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionResult(int requestCode, String permissions[], int[] grantResults){
         switch(requestCode){
@@ -325,5 +330,10 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
             } catch (Exception e) {}
         }
         return bitmap;
+    }
+
+    private String getDate(){
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateformat.format(date);
     }
 }

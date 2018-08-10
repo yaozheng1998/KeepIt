@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -64,21 +66,9 @@ public class TodayFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-//        ArrayList<MyActivity> myActivities=new ArrayList<>();
-//        myActivities.add(new MyActivity("阅读","10:00","12:00",""));
-//        myActivities.add(new MyActivity("玩耍","13:00","18:00",""));
-//        Gson gson=new Gson();
-//        String jsonStr=gson.toJson(myActivities);
-//        editor.putString("activities",jsonStr);
-//        editor.apply();
-
-//        手动清空今日活动界面
-//        editor.clear();
-//        editor.commit();
-
         RecyclerView recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(),getActFromGson(preferencess.getString("activities",""))                                                                                                                                        );
+        RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(), DataSupport.findAll(MyActivity.class));
 
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new MyItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));

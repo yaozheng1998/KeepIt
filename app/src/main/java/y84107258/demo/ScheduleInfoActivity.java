@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 
 import y84107258.demo.model.MyActivity;
@@ -43,9 +46,6 @@ public class ScheduleInfoActivity extends Activity{
     private FloatingActionButton update;
     private Button confirm_update;
 
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
-
     private String s_title;
     private String s_des;
 
@@ -54,9 +54,6 @@ public class ScheduleInfoActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_info);
         initComponent();
-
-        preferences=getSharedPreferences("activities",0);
-        editor=preferences.edit();
 
         Intent intent=getIntent();
         s_title=intent.getStringExtra("s_title");
@@ -92,18 +89,7 @@ public class ScheduleInfoActivity extends Activity{
                 confirmDialog.show("提示", "删除后不可恢复，确认删除?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        ArrayList<MyActivity> myActivities = ActGsonUtil.getActFromGson(preferences.getString("activities", ""));
-                        for (int i = 0; i < myActivities.size(); i++) {
-                            if (myActivities.get(i).getActivityName().equals(s_title)) {
-                                myActivities.remove(i);
-                            }
-                        }
-                        Gson gson = new Gson();
-                        String jsonStr = gson.toJson(myActivities);
-                        editor.putString("activities", jsonStr);
-                        editor.apply();
-
-//                        scheduleInfoActivity.getActivityFragment();
+                        DataSupport.deleteAll(MyActivity.class,"activityName=?",s_title);
                         Intent intent = new Intent(ScheduleInfoActivity.this, TodoListActivity.class);
                         startActivity(intent);
                     }
@@ -132,19 +118,10 @@ public class ScheduleInfoActivity extends Activity{
             public void onClick(View view) {
                 String newTitle=title_edit.getText().toString();
                 String newDes=des_edit.getText().toString();
-                ArrayList<MyActivity> myActivities = ActGsonUtil.getActFromGson(preferences.getString("activities", ""));
-                for (int i = 0; i < myActivities.size(); i++) {
-                    MyActivity tempAct=myActivities.get(i);
-                    if (tempAct.getActivityName().equals(s_title)) {
-                        tempAct.setActivityName(newTitle);
-                        tempAct.setDescription(newDes);
-                    }
-                }
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(myActivities);
-                editor.putString("activities", jsonStr);
-                editor.apply();
-
+                MyActivity activity=new MyActivity();
+                activity.setActivityName(newTitle);
+                activity.setDescription(newDes);
+                activity.updateAll("activityName=?",s_title);
                 setInvisible();
                 Intent intent = new Intent(ScheduleInfoActivity.this, TodoListActivity.class);
                 startActivity(intent);

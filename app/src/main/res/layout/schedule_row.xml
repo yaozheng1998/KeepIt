@@ -51,12 +51,11 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/finish"
+        android:id="@+id/finishView"
         android:layout_width="33dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/finishGreen"
-        android:text="打卡"
         android:textColor="@android:color/white" />
 
     <Space

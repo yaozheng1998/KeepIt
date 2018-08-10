@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.litepal.crud.DataSupport;
+
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,10 +35,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener itemClickListener;
     private Drawable pic;
     private LinearLayout details;
-
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
-
     Date d=new Date();
 
     RecyclerViewAdapter(Context context, List<MyActivity> data){
@@ -48,11 +46,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.schedule_row, parent, false);
-        whetherFinish= view.findViewById(R.id.finish);
+        whetherFinish= view.findViewById(R.id.finishView);
         whetherFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"打卡成功！",Toast.LENGTH_SHORT).show();
+                if (whetherFinish.getText().equals("已打卡")){
+                    Toast.makeText(view.getContext(),"已经打过卡啦~",Toast.LENGTH_SHORT).show();
+                }else {
+                    MyActivity activity=new MyActivity();
+                    activity.setChecked(true);
+//                    activity.updateAll("activityName=?",((TextView)view.findViewById(R.id.schedule_name)).getText().toString());
+                    whetherFinish.setText("已打卡");
+                    Toast.makeText(view.getContext(), "打卡成功！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -70,10 +76,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 view.getContext().startActivity(intent);
             }
         });
-
-        preferences=view.getContext().getSharedPreferences("activities",0);
-        editor=preferences.edit();
-
         return new ViewHolder(view);
     }
 
@@ -83,6 +85,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.myTextView.setText(oneActivity.getActivityName());
         holder.timeView.setText(oneActivity.getStartTime()+" - "+oneActivity.getEndTime());
         holder.myImageView.setImageDrawable(pic);
+        if (oneActivity.isChecked()){
+            holder.isEndView.setText("已打卡");
+        }else{
+            holder.isEndView.setText("打卡");
+        }
     }
 
     @Override
@@ -97,12 +104,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onItemLeft(int position) {
-        data.remove(position);
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(data);
-        editor.putString("activities", jsonStr);
-        editor.apply();
+        String name=data.get(position).getActivityName();
+        DataSupport.deleteAll(MyActivity.class,"activityName=?",name);
         //可以实现自动页面刷新，需要使用同一个List
+        //换成DataSupport后左滑删除失效
         notifyDataSetChanged();
     }
 
@@ -113,12 +118,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView myImageView;
         TextView myTextView;
         TextView timeView;
+        TextView isEndView;
 
         ViewHolder(View itemView){
             super(itemView);
             myImageView=itemView.findViewById(R.id.schedule_photo);
             myTextView=itemView.findViewById(R.id.schedule_name);
             timeView=itemView.findViewById(R.id.schedule_time);
+            isEndView=itemView.findViewById(R.id.finishView);
             itemView.setOnClickListener(this);
         }
         @Override
@@ -157,7 +164,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private String getDesFromSP(String actName){
         String result="";
-        ArrayList<MyActivity> myActivities= ActGsonUtil.getActFromGson(preferences.getString("activities",""));
+        ArrayList<MyActivity> myActivities= (ArrayList<MyActivity>) DataSupport.findAll(MyActivity.class);
         for (int i=0;i<myActivities.size();i++){
             if (myActivities.get(i).getActivityName().equals(actName)){
                 result=myActivities.get(i).getDescription();

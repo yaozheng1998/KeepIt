@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.litepal.LitePal;
+
 public class MainActivity extends Activity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -23,6 +25,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**
+         * 创建出KeepIt数据库
+         */
+        LitePal.getDatabase();
         setContentView(R.layout.activity_main);
         pref= PreferenceManager.getDefaultSharedPreferences(this);
         usernameEdit=(EditText)findViewById(R.id.input_username);

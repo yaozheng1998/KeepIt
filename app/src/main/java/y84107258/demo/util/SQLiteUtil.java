@@ -3,6 +3,7 @@ package y84107258.demo.util;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class SQLiteUtil extends SQLiteOpenHelper {
     public static final String DBNAME="keep.db";
@@ -16,6 +17,16 @@ public class SQLiteUtil extends SQLiteOpenHelper {
     public static final String TABLE_ACTIVITY_COLUMN_ISDONE="isDone";
     public static final String TABLE_ACTIVITY_COLUMN_USERNAME="userId";
 
+    private String CREATE_USER="CREATE TABLE [user](\n" +
+            "  [username] VARCHAR NOT NULL, \n" +
+            "  [description] VARCHAR);\n";
+    private String CREATE_ACTIVITY="CREATE TABLE [activity](\n" +
+            "  [activityName] VARCHAR, \n" +
+            "  [activityDate] DATE, \n" +
+            "  [startTime], \n" +
+            "  [endTime], \n" +
+            "  [isDone] TINYINT, \n" +
+            "  [userId] VARCHAR);\n";
 
     public SQLiteUtil(Context context, int version){
         super(context,DBNAME,null,version);
@@ -23,14 +34,12 @@ public class SQLiteUtil extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql="create table if not exists "+TABLE_USER+" ("+TABLE_USER_COLUMN_USERNAME+" VARCHAR NOT NULL);";
-        sqLiteDatabase.execSQL(sql);
+        sqLiteDatabase.execSQL(CREATE_USER);
+        sqLiteDatabase.execSQL(CREATE_ACTIVITY);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        String sql="DROP TABLE IF EXISTS "+TABLE_USER;
-        sqLiteDatabase.execSQL(sql);
-        onCreate(sqLiteDatabase);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        Log.v("SQLiteUtil","Database is upgraded");
     }
 }
