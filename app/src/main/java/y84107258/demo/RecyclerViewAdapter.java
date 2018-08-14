@@ -46,6 +46,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.schedule_row, parent, false);
+
+        details=view.findViewById(R.id.schedule_detail);
+        details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent((Activity)view.getContext(), ScheduleInfoActivity.class);
+                //在Intent中传输数据
+                String actName=((TextView)view.findViewById(R.id.schedule_name)).getText().toString();
+                String[] info=getDesFromDB(actName).split("-");
+                intent.putExtra("s_title",actName);
+                intent.putExtra("s_date",getDate()+"     "+getDay());
+                intent.putExtra("s_time",((TextView)view.findViewById(R.id.schedule_time)).getText().toString());
+                intent.putExtra("s_alarm",info[1]);
+                intent.putExtra("s_des",info[0]);
+                view.getContext().startActivity(intent);
+            }
+        });
+
         whetherFinish= view.findViewById(R.id.finishView);
         whetherFinish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,20 +80,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-        details=view.findViewById(R.id.schedule_detail);
-        details.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent((Activity)view.getContext(), ScheduleInfoActivity.class);
-                //在Intent中传输数据
-                String actName=((TextView)view.findViewById(R.id.schedule_name)).getText().toString();
-                intent.putExtra("s_title",actName);
-                intent.putExtra("s_date",getDate()+"     "+getDay());
-                intent.putExtra("s_time",((TextView)view.findViewById(R.id.schedule_time)).getText().toString());
-                intent.putExtra("s_des",getDesFromSP(actName));
-                view.getContext().startActivity(intent);
-            }
-        });
         return new ViewHolder(view);
     }
 
@@ -135,8 +139,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 itemClickListener.onItemClick(view, getAdapterPosition());
             }
         }
-
-
     }
 
     public void setClickListener(ItemClickListener itemClickListener){
@@ -162,12 +164,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return dateformat.format(d);
     }
 
-    private String getDesFromSP(String actName){
-        String result="";
+    private String getDesFromDB(String actName){
+        String result="-";
         ArrayList<MyActivity> myActivities= (ArrayList<MyActivity>) DataSupport.findAll(MyActivity.class);
         for (int i=0;i<myActivities.size();i++){
             if (myActivities.get(i).getActivityName().equals(actName)){
-                result=myActivities.get(i).getDescription();
+                result=myActivities.get(i).getDescription()+"-"+myActivities.get(i).getAlarmTime();
             }
         }
         return result;

@@ -9,13 +9,14 @@ import java.util.Date;
 public class MyActivity extends DataSupport{
     private String activityName;
     private String activityDate;
+    private boolean isChecked;
     private String startTime;
     private String endTime;
     private String pic;
     private String alarmTime;
     private String description;
     private String userId;
-    private boolean isChecked;
+
 
     public MyActivity(){
 

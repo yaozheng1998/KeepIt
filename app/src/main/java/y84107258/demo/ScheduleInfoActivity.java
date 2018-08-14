@@ -12,9 +12,11 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +48,10 @@ public class ScheduleInfoActivity extends Activity{
     private FloatingActionButton update;
     private Button confirm_update;
 
+    private Spinner spinner;
     private String s_title;
     private String s_des;
+    private String s_alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +64,38 @@ public class ScheduleInfoActivity extends Activity{
         String s_date=intent.getStringExtra("s_date");
         String s_time=intent.getStringExtra("s_time");
         s_des=intent.getStringExtra("s_des");
+        s_alarm=intent.getStringExtra("s_alarm");
         title.setText(s_title);
         date.setText(s_date);
         time.setText(s_time);
         description.setText(s_des);
 
+        spinner.setSelection(Integer.parseInt(s_alarm) / 5);
+        spinner.setPrompt("请选择提醒时间");
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                int span=0;
+                String[] types=getResources().getStringArray(R.array.reminder_labels);
+                switch (position){
+                    case 0:break;
+                    case 1:span=5;break;
+                    case 2:span=10;break;
+                    case 3:span=15;break;
+                    default:break;
+                }
+                MyActivity activity=new MyActivity();
+                activity.setAlarmTime(span+"");
+                activity.updateAll("activityName=?",s_title);
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -79,7 +110,7 @@ public class ScheduleInfoActivity extends Activity{
         });
 
         /**
-         * sp中删除，页面刷新跳转
+         * db中删除，页面刷新跳转
          */
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +169,7 @@ public class ScheduleInfoActivity extends Activity{
         title=findViewById(R.id.detail_alarm_title);
         date=findViewById(R.id.detail_alarm_date);
         time=findViewById(R.id.detail_alarm_start_end_time);
-        alarm=findViewById(R.id.detail_alarm_remind);
+        spinner=findViewById(R.id.detail_alarm_remind);
         description=findViewById(R.id.detail_alarm_description);
         back=findViewById(R.id.left_alarm_back);
         delete=findViewById(R.id.tv_delete);

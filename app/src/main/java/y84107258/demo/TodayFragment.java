@@ -37,6 +37,9 @@ public class TodayFragment extends Fragment {
     private ItemTouchHelper.Callback callback;
     private ItemTouchHelper itemTouchHelper;
 
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +48,8 @@ public class TodayFragment extends Fragment {
         editor=preferencess.edit();
 
         View view=inflater.inflate(R.layout.fragment_today, container, false);
+        recyclerView=view.findViewById(R.id.recycler_view);
+
         view.findViewById(R.id.newSchedule).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,10 +71,8 @@ public class TodayFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        RecyclerView recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerViewAdapter adapter=new RecyclerViewAdapter(getActivity(), DataSupport.findAll(MyActivity.class));
-
+        adapter=new RecyclerViewAdapter(getActivity(), DataSupport.findAll(MyActivity.class));
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new MyItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL,10, getResources().getColor(R.color.divide_gray_color)));
 
@@ -80,10 +83,16 @@ public class TodayFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         //设置每日零点的定时任务，清空今日活动列表;
-        startRemind();
     }
 
     public static ArrayList<MyActivity> getActFromGson(String raw){
@@ -96,32 +105,5 @@ public class TodayFragment extends Fragment {
             }
         }
         return result;
-    }
-
-    private void startRemind(){
-        Calendar mCalendar=Calendar.getInstance();
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        long systemTime=System.currentTimeMillis();
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        mCalendar.set(Calendar.HOUR_OF_DAY,16);
-        mCalendar.set(Calendar.MINUTE,59);
-        mCalendar.set(Calendar.SECOND,0);
-        mCalendar.set(Calendar.MILLISECOND,0);
-        long selectTime=mCalendar.getTimeInMillis();
-        if (systemTime>selectTime){
-            mCalendar.add(Calendar.DAY_OF_MONTH,1);
-        }
-        Intent intent=new Intent(getActivity(),AlarmReceiver.class);
-        PendingIntent pi=PendingIntent.getBroadcast(getActivity(),0, intent,0);
-        AlarmManager am=(AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        //先设置每五分钟提醒一次
-        am.setRepeating(AlarmManager.RTC_WAKEUP,mCalendar.getTimeInMillis(),1000*60*2,pi);
-    }
-    private void stopRemind(){
-        Intent intent=new Intent(getActivity(),AlarmReceiver.class);
-        PendingIntent pi=PendingIntent.getBroadcast(getActivity(),0,intent,0);
-        AlarmManager am=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-        am.cancel(pi);
     }
 }

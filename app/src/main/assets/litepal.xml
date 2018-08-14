@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="KeepIt"></dbname>
-    <version value="1"></version>
+    <version value="2"></version>
     <list>
         <mapping class="y84107258.demo.model.User"></mapping>
         <mapping class="y84107258.demo.model.MyActivity"></mapping>

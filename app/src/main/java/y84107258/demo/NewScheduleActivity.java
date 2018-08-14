@@ -88,9 +88,12 @@ public class NewScheduleActivity extends Activity implements ScheduleDialogFragm
                 } else{
                     MyActivity activity=new MyActivity();
                     activity.setActivityName(activityName);
+                    activity.setChecked(false);
                     activity.setStartTime(startTime);
                     activity.setEndTime(endTime);
                     activity.setActivityDate(getDate());
+                    activity.setDescription("备注");
+                    activity.setAlarmTime("0");
                     activity.setUserId(preferences.getString("myusername",""));
                     activity.save();
 

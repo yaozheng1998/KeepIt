@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
          * 创建出KeepIt数据库
          */
         LitePal.getDatabase();
+
         setContentView(R.layout.activity_main);
         pref= PreferenceManager.getDefaultSharedPreferences(this);
         usernameEdit=(EditText)findViewById(R.id.input_username);
@@ -52,6 +53,9 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        Intent intent=new Intent(this, AlarmService.class);
+        startService(intent);
     }
 
     public void login (View view) {
